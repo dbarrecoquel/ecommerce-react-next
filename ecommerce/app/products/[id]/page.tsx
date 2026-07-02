@@ -3,6 +3,7 @@ import { useProduct } from "@/contexts/product-details.context";
 import { use, useEffect } from "react";
 import styles from "./page.module.css";
 import Link from "next/link";
+import SearchBar from "@/components/searchbar/searchbar";
 function formatPrice(price: number): string {
   return new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(price);
 }
@@ -10,10 +11,8 @@ export default  function ProductDetailsPage({ params }: { params: Promise<{ id: 
 
     const {id} = use(params);
     const {product, loading, error, loadProduct} = useProduct();
-    console.log("render");
-
+  
     useEffect(() => {
-      console.log("in effect");
         loadProduct(Number(id));
     }, [id, loadProduct]);
 
@@ -37,6 +36,8 @@ export default  function ProductDetailsPage({ params }: { params: Promise<{ id: 
     if (!product) return null;
 
      return (
+      <>
+       
     <div className={styles.container}>
       <Link href="/" className={styles.backBtn}>← Retour sur la page d'acceuil</Link>
 
@@ -67,5 +68,6 @@ export default  function ProductDetailsPage({ params }: { params: Promise<{ id: 
         </div>
       </div>
     </div>
+    </>
   );
 }

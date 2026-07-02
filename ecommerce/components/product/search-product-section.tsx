@@ -4,6 +4,7 @@ import { useProductSearch } from "@/contexts/products.context";
 import { ProductSearchParams } from "@/models/product.model";
 import { useEffect, useRef } from "react";
 import ProductsSearch from "./search-product-list";
+import Pagination from "../pagination/pagination";
 
 interface ProductSearchSectionProps {
   params: ProductSearchParams;
@@ -24,6 +25,7 @@ export default function ProductSearchSection({ params }:ProductSearchSectionProp
 
   return(<>
         <ProductsSearch></ProductsSearch>
+        <Pagination/>
     </>
   )
 }
