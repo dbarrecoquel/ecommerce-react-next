@@ -39,7 +39,7 @@ export default  function ProductDetailsPage({ params }: { params: Promise<{ id: 
 
      return (
       <>
-    <Header></Header>   
+    <Header></Header>
     <div className={styles.container}>
       <Link href="/" className={styles.backBtn}>← Retour sur la page d'acceuil</Link>
 

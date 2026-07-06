@@ -1,6 +1,7 @@
 import Link from "next/link";
 import HeaderSearchInput from "./header-search-input";
 import styles from "./header.module.css";
+import BasketIcon from "../basket/basket-icon";
 
 export default function Header() {
   return (
@@ -18,6 +19,7 @@ export default function Header() {
         <nav className={styles.nav}>
           <Link href="/" className={styles.navLink}>Annonces</Link>
           <Link href="/products" className={styles.navLink}>Produits</Link>
+          <BasketIcon />
         </nav>
       </div>
     </header>

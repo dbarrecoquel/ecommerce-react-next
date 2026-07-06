@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { CatalogProvider } from "@/contexts/category.context";
+import { BasketProvider } from "@/contexts/basket.context";
+import Header from "@/components/header/header";
 
 
 const inter = Inter ({ subsets : ["latin"]});
@@ -21,9 +23,15 @@ export default function RootLayout({
       lang="en"
     >
       <body className="min-h-full flex flex-col">
-        <CatalogProvider>
-          {children}
-        </CatalogProvider>
+        <BasketProvider>
+          
+          <CatalogProvider>
+            <main className="main-content">
+            {children}
+            </main>
+          </CatalogProvider>
+          
+        </BasketProvider>
         </body>
     </html>
   );

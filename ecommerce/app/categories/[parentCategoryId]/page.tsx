@@ -14,6 +14,7 @@ export default async function SubCat({params} : {params : Promise<{parentCategor
           Des milliers de produits au meilleur prix
         </p>
       </div>
+
       <Header></Header>
       <div className={styles.listSection}>
         <SubCategorySection parentCategoryId={parentCategoryId}/>

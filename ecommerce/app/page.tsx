@@ -14,7 +14,7 @@ export default function Home() {
         </p>
       </div>
 
-       <Header></Header>
+      <Header></Header>
       <div className={styles.listSection}>
         <CatalogSection />
       </div>
