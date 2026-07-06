@@ -1,41 +1,56 @@
 "use client";
+
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { ProductSearchParams } from "@/models/product.model";
 import { useProductSearch } from "@/contexts/products.context";
 import { useDebounce } from "@/hooks/use-debounce";
 import styles from "./searchbar.module.css";
-interface SearchBarProps {
-    initialParams : ProductSearchParams;
+
+interface SearchBarProps {
+  initialParams: ProductSearchParams;
 }
 
-export default function SearchBar({initialParams}: SearchBarProps){
+export default function SearchBar({ initialParams }: SearchBarProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const { loadProducts } = useProductSearch();
 
-    const router = useRouter();
-    const pathName = usePathname();
-    const { loadProducts } = useProductSearch();
+  const [search, setSearch] = useState(initialParams.search ?? "");
+  const [minPrice, setMinPrice] = useState<number | "">(initialParams.minPrice ?? "");
+  const [maxPrice, setMaxPrice] = useState<number | "">(initialParams.maxPrice ?? "");
+  const [sortBy, setSortBy] = useState<"price" | "">(initialParams.sortBy ?? "");
+  const [direction, setDirection] = useState<"ASC" | "DESC" | "">(initialParams.direction ?? "");
 
-    const [search, setSearch] = useState(initialParams.search ?? "");
-    const [minPrice, setMinPrice] = useState<number | "">(initialParams.minPrice ?? "");
-    const [maxPrice, setMaxPrice] = useState<number | "">(initialParams.maxPrice ?? "");
-    const [sortBy, setSortBy] = useState<"price" | "">(initialParams.sortBy ?? "");
-    const [direction, setDirection] = useState<"ASC" | "DESC" | "">(initialParams.direction ?? "");
+  const debouncedSearch = useDebounce(search, 400);
+  const debounceMinPrice = useDebounce(minPrice, 400);
+  const debounceMaxPrice = useDebounce(maxPrice, 400);
 
-    const debouncedSearch = useDebounce(search, 400);
-    const debounceMinPrice = useDebounce(minPrice, 400);
-    const debounceMaxPrice = useDebounce(maxPrice, 400);
+  const isFirstSearch = useRef(true);
+  const isFirstMinPrice = useRef(true);
+  const isFirstMaxPrice = useRef(true);
 
-    const isFirstSearch = useRef(true);
-    const isFirstMinPrice = useRef(true);
-    const isFirstMaxPrice = useRef(true);
+  const pathnameRef = useRef(pathname);
+  useEffect(() => { pathnameRef.current = pathname; }, [pathname]);
 
-  // Ref sur pathname pour que triggerSearch lise toujours la valeur courante
-  // même quand il est appelé depuis une closure (useEffect debounce)
-    const pathnameRef = useRef(pathName);
+  // Sync l'input search avec ce que le Header a posé dans l'URL
+  // (quand on navigue depuis le Header vers /products?search=xxx)
+  useEffect(() => {
+    setSearch(initialParams.search ?? "");
+    setMinPrice(initialParams.minPrice ?? "");
+    setMaxPrice(initialParams.maxPrice ?? "");
+    setSortBy(initialParams.sortBy ?? "");
+    setDirection(initialParams.direction ?? "");
+    // Réarme les guards pour éviter un double appel
+    isFirstSearch.current = true;
+    isFirstMinPrice.current = true;
+    isFirstMaxPrice.current = true;
+  // On ré-exécute à chaque fois que les params URL changent (navigation Header)
+  // JSON.stringify pour comparer les objets en profondeur
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(initialParams)]);
 
-    useEffect(() => { pathnameRef.current = pathName; }, [pathName]);
-
-     const triggerSearch = useCallback((overrides: Partial<ProductSearchParams> = {}) => {
+  const triggerSearch = useCallback((overrides: Partial<ProductSearchParams> = {}) => {
     if (pathnameRef.current !== "/products") return;
 
     const params: ProductSearchParams = {
@@ -45,7 +60,7 @@ export default function SearchBar({initialParams}: SearchBarProps){
       minPrice: minPrice !== "" ? minPrice : undefined,
       maxPrice: maxPrice !== "" ? maxPrice : undefined,
       sortBy: sortBy || undefined,
-      direction : direction || undefined, 
+      direction: direction || undefined,
       ...overrides,
     };
 
@@ -59,7 +74,7 @@ export default function SearchBar({initialParams}: SearchBarProps){
     const qs = q.toString();
     router.replace(qs ? `/products?${qs}` : "/products", { scroll: false });
     loadProducts(params);
-  }, [search, minPrice, maxPrice, sortBy,direction, loadProducts, router]);
+  }, [search, minPrice, maxPrice, sortBy, direction, loadProducts, router]);
 
   useEffect(() => {
     if (isFirstSearch.current) { isFirstSearch.current = false; return; }
@@ -77,9 +92,7 @@ export default function SearchBar({initialParams}: SearchBarProps){
   }, [debounceMaxPrice]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleReset = () => {
-    setSearch("");
-    setMinPrice(""); setMaxPrice(""); setSortBy("");
-    setDirection("");
+    setSearch(""); setMinPrice(""); setMaxPrice(""); setSortBy(""); setDirection("");
     loadProducts({ page: 0, size: 10 });
     router.replace("/products", { scroll: false });
   };
@@ -102,8 +115,6 @@ export default function SearchBar({initialParams}: SearchBarProps){
           />
         </div>
 
-
-
         <select
           className={styles.select}
           value={sortBy}
@@ -117,7 +128,7 @@ export default function SearchBar({initialParams}: SearchBarProps){
           <option value="price">Prix</option>
         </select>
 
-         <select
+        <select
           className={styles.select}
           value={direction}
           onChange={(e) => {
@@ -126,12 +137,12 @@ export default function SearchBar({initialParams}: SearchBarProps){
             triggerSearch({ direction: val || undefined });
           }}
         >
-          <option value="">Trier par</option>
-          <option value="ASC">Ordre croissant</option>
-          <option value="DESC">Ordre décroissant</option>
+          <option value="">Ordre</option>
+          <option value="ASC">Croissant</option>
+          <option value="DESC">Décroissant</option>
         </select>
       </div>
-          
+
       <div className={styles.priceRow}>
         <div className={styles.priceGroup}>
           <label className={styles.label}>Prix min (€)</label>

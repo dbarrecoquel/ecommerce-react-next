@@ -1,9 +1,11 @@
 "use client";
 import { useProduct } from "@/contexts/product-details.context";
-import { use, useEffect } from "react";
+import { use, useEffect, useState } from "react";
 import styles from "./page.module.css";
 import Link from "next/link";
 import SearchBar from "@/components/searchbar/searchbar";
+import QuantityInput from "@/components/quantity/quantity";
+import Header from "@/components/header/header";
 function formatPrice(price: number): string {
   return new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(price);
 }
@@ -11,7 +13,7 @@ export default  function ProductDetailsPage({ params }: { params: Promise<{ id: 
 
     const {id} = use(params);
     const {product, loading, error, loadProduct} = useProduct();
-  
+    const [qty, setQty] = useState(1);
     useEffect(() => {
         loadProduct(Number(id));
     }, [id, loadProduct]);
@@ -37,7 +39,7 @@ export default  function ProductDetailsPage({ params }: { params: Promise<{ id: 
 
      return (
       <>
-       
+    <Header></Header>   
     <div className={styles.container}>
       <Link href="/" className={styles.backBtn}>← Retour sur la page d'acceuil</Link>
 
@@ -60,6 +62,22 @@ export default  function ProductDetailsPage({ params }: { params: Promise<{ id: 
           <div className={styles.description}>
             <h2 className={styles.sectionTitle}>Description</h2>
             <p className={styles.descriptionText}>{product.description}</p>
+          </div>
+
+          <div className={styles.buyRow}>
+            <div className={styles.qtyGroup}>
+              <label className={styles.qtyLabel}>Quantité</label>
+              <QuantityInput min={1} max={99} initial={1} onChange={setQty} />
+            </div>
+            <div className={styles.totalGroup}>
+              <span className={styles.totalLabel}>Total</span>
+              <span className={styles.totalPrice}>
+                {formatPrice(product.price * qty)}
+              </span>
+            </div>
+            <button className={styles.addToCartBtn}>
+              🛒 Ajouter au panier
+            </button>
           </div>
 
           <div className={styles.metaRow}>

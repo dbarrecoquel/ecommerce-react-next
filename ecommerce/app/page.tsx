@@ -1,3 +1,4 @@
+import Header from "@/components/header/header";
 import styles from "./page.module.css";
 import CatalogSection from "@/components/category/category-section";
 
@@ -12,6 +13,8 @@ export default function Home() {
           Des milliers d'annonces produit au meilleur prix
         </p>
       </div>
+
+       <Header></Header>
       <div className={styles.listSection}>
         <CatalogSection />
       </div>

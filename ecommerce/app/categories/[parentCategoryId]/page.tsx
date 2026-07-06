@@ -1,5 +1,6 @@
 import SubCategorySection from "@/components/category/sub-category-section";
 import styles from "./page.module.css";
+import Header from "@/components/header/header";
 export default async function SubCat({params} : {params : Promise<{parentCategoryId : string}>}) {
      const { parentCategoryId } = await params;
 
@@ -13,6 +14,7 @@ export default async function SubCat({params} : {params : Promise<{parentCategor
           Des milliers de produits au meilleur prix
         </p>
       </div>
+      <Header></Header>
       <div className={styles.listSection}>
         <SubCategorySection parentCategoryId={parentCategoryId}/>
       </div>
