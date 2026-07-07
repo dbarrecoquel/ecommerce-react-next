@@ -25,7 +25,6 @@ export function ProductsSearchProvider({children} : {children : ReactNode}){
 
     const loadProducts = useCallback(async (params ?: ProductSearchParams) => {
         const effectiveParams = params ?? searchParams;
-        console.log('ici', effectiveParams)
         setSearchParams(effectiveParams);
         setLoading(true);
         setError("");

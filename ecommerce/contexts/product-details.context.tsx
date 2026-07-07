@@ -23,7 +23,6 @@ export function ProductDetailsProvider({children }: {children : ReactNode}){
     const loadProduct = useCallback(async (id : number) => {
         setError("");
         setLoading(true);
-        console.log("in callback");
         try {
             const data = await fetchProductById(id);
             setProduct(data);
