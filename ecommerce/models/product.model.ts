@@ -18,13 +18,14 @@ export interface ProductList{
     totalElements : number;
 
 }
-export interface ProductSearchParams{
-    page? : number;
-    sortBy? : "price";
-    direction? : "ASC" | "DESC";
-    search? : string;
-    minPrice? : number;
-    maxPrice? : number;
-    size? : number;
 
+export interface ProductSearchParams {
+  page?: number;
+  size?: number;
+  search?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  sortBy?: "price";
+  direction?: "ASC" | "DESC";
+  [key: string]: string | number | undefined;
 }

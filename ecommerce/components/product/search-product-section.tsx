@@ -10,22 +10,26 @@ interface ProductSearchSectionProps {
   params: ProductSearchParams;
 }
 
-export default function ProductSearchSection({ params }:ProductSearchSectionProps){
-    const {loadProducts} = useProductSearch();
-    const initialLoadDone = useRef(false);
-    console.log(params);
-    useEffect(() => {
-        // Charge une seule fois au montage avec les params de l'URL.
-        // Les recherches suivantes sont déclenchées par SearchBar directement.
-        if (initialLoadDone.current) return;
-        initialLoadDone.current = true;
-        loadProducts(params);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+export default function ProductSearchSection({ params }: ProductSearchSectionProps) {
+  const { loadProducts, products, searchParams } = useProductSearch();
+  const initialLoadDone = useRef(false);
+
+  useEffect(() => {
+    if (initialLoadDone.current) return;
+    initialLoadDone.current = true;
+    loadProducts(params);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return(<>
-        <ProductsSearch></ProductsSearch>
-        <Pagination/>
+  return (
+    <>
+      <ProductsSearch />
+      <Pagination
+        data={products}
+        basePath="/products"
+        extraParams={searchParams}
+        onPageChange={(p) => loadProducts({ ...searchParams, page: p })}
+      />
     </>
-  )
+  );
 }

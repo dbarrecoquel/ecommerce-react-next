@@ -30,37 +30,47 @@ export default function SearchBar({ initialParams }: SearchBarProps) {
   const isFirstMinPrice = useRef(true);
   const isFirstMaxPrice = useRef(true);
 
+  // Refs pour éviter les stale closures dans triggerSearch
   const pathnameRef = useRef(pathname);
-  useEffect(() => { pathnameRef.current = pathname; }, [pathname]);
+  const searchRef = useRef(search);
+  const minPriceRef = useRef(minPrice);
+  const maxPriceRef = useRef(maxPrice);
+  const sortByRef = useRef(sortBy);
+  const directionRef = useRef(direction);
 
-  // Sync l'input search avec ce que le Header a posé dans l'URL
-  // (quand on navigue depuis le Header vers /products?search=xxx)
+  // Sync toutes les refs à chaque changement d'état
+  useEffect(() => { pathnameRef.current = pathname; }, [pathname]);
+  useEffect(() => { searchRef.current = search; }, [search]);
+  useEffect(() => { minPriceRef.current = minPrice; }, [minPrice]);
+  useEffect(() => { maxPriceRef.current = maxPrice; }, [maxPrice]);
+  useEffect(() => { sortByRef.current = sortBy; }, [sortBy]);
+  useEffect(() => { directionRef.current = direction; }, [direction]);
+
+  // Sync les états depuis initialParams (navigation depuis le Header)
   useEffect(() => {
     setSearch(initialParams.search ?? "");
     setMinPrice(initialParams.minPrice ?? "");
     setMaxPrice(initialParams.maxPrice ?? "");
     setSortBy(initialParams.sortBy ?? "");
     setDirection(initialParams.direction ?? "");
-    // Réarme les guards pour éviter un double appel
     isFirstSearch.current = true;
     isFirstMinPrice.current = true;
     isFirstMaxPrice.current = true;
-  // On ré-exécute à chaque fois que les params URL changent (navigation Header)
-  // JSON.stringify pour comparer les objets en profondeur
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(initialParams)]);
 
+  // triggerSearch lit les refs — stable, jamais de stale closure
   const triggerSearch = useCallback((overrides: Partial<ProductSearchParams> = {}) => {
     if (pathnameRef.current !== "/products") return;
 
     const params: ProductSearchParams = {
       page: 0,
       size: 10,
-      search: search || undefined,
-      minPrice: minPrice !== "" ? minPrice : undefined,
-      maxPrice: maxPrice !== "" ? maxPrice : undefined,
-      sortBy: sortBy || undefined,
-      direction: direction || undefined,
+      search: searchRef.current || undefined,
+      minPrice: minPriceRef.current !== "" ? minPriceRef.current : undefined,
+      maxPrice: maxPriceRef.current !== "" ? maxPriceRef.current : undefined,
+      sortBy: sortByRef.current || undefined,
+      direction: directionRef.current || undefined,
       ...overrides,
     };
 
@@ -74,7 +84,7 @@ export default function SearchBar({ initialParams }: SearchBarProps) {
     const qs = q.toString();
     router.replace(qs ? `/products?${qs}` : "/products", { scroll: false });
     loadProducts(params);
-  }, [search, minPrice, maxPrice, sortBy, direction, loadProducts, router]);
+  }, [loadProducts, router]); // stable — ne dépend plus des états
 
   useEffect(() => {
     if (isFirstSearch.current) { isFirstSearch.current = false; return; }

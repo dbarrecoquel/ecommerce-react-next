@@ -26,9 +26,7 @@ export default function RootLayout({
         <BasketProvider>
           
           <CatalogProvider>
-            <main className="main-content">
             {children}
-            </main>
           </CatalogProvider>
           
         </BasketProvider>

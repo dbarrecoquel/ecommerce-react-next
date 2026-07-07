@@ -3,20 +3,50 @@ import { useProduct } from "@/contexts/product-details.context";
 import { use, useEffect, useState } from "react";
 import styles from "./page.module.css";
 import Link from "next/link";
-import SearchBar from "@/components/searchbar/searchbar";
 import QuantityInput from "@/components/quantity/quantity";
-import Header from "@/components/header/header";
+import { useBasket } from "@/contexts/basket.context";
+import { addToBasket } from "@/lib/api-basket";
 function formatPrice(price: number): string {
   return new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(price);
 }
+
+type ToastState = { type : "success" | "error"; message : string} | null;
+
 export default  function ProductDetailsPage({ params }: { params: Promise<{ id: string }>}){
 
     const {id} = use(params);
     const {product, loading, error, loadProduct} = useProduct();
+    const { refreshCount } = useBasket();
     const [qty, setQty] = useState(1);
+    const [adding, setAdding] = useState(false);
+    const [toast, setToast] = useState<ToastState>(null);
+
     useEffect(() => {
         loadProduct(Number(id));
     }, [id, loadProduct]);
+    //autoFermeture du toast après 3 sec
+
+    useEffect(()=> {
+      if (!toast) return;
+      const timer = setTimeout(()=> setToast(null), 3000);
+      return () => clearTimeout(timer);
+    }, [toast]);
+
+    const handleAddToBasket = async () => {
+      if (!product || adding) return;
+      setAdding(true);
+      try {
+        const response = await addToBasket({productId : product.id, quantity : qty});
+        setToast({type : 'success', message : response.message});
+        await refreshCount();
+      }
+      catch(err) {
+        setToast({type : 'error', message : err instanceof Error ? err.message : "Erreur lors de l'ajout au panier"});
+      }
+      finally {
+        setAdding(false);
+      }
+    }
 
     if (loading){
         return (
@@ -39,7 +69,15 @@ export default  function ProductDetailsPage({ params }: { params: Promise<{ id: 
 
      return (
       <>
-    <Header></Header>
+      {toast && (
+        <div className={`${styles.toast} ${styles[toast.type]}`}>
+          <span className={styles.toastIcon}>
+            {toast.type === "success" ? "✅" : "❌"}
+          </span>
+          <span className={styles.toastMessage}>{toast.message}</span>
+          <button className={styles.toastClose} onClick={() => setToast(null)}>✕</button>
+        </div>
+      )}
     <div className={styles.container}>
       <Link href="/" className={styles.backBtn}>← Retour sur la page d'acceuil</Link>
 
@@ -75,9 +113,14 @@ export default  function ProductDetailsPage({ params }: { params: Promise<{ id: 
                 {formatPrice(product.price * qty)}
               </span>
             </div>
-            <button className={styles.addToCartBtn}>
-              🛒 Ajouter au panier
-            </button>
+            <button
+                className={`${styles.addToCartBtn} ${adding ? styles.adding : ""}`}
+                onClick={handleAddToBasket}
+                disabled={adding}
+              >
+                {adding ? "Ajout en cours…" : "🛒 Ajouter au panier"}
+              </button>
+
           </div>
 
           <div className={styles.metaRow}>

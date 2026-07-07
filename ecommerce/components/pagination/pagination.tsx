@@ -1,42 +1,43 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useProductSearch } from "@/contexts/products.context";
 import styles from "./pagination.module.css";
 
-export default function Pagination(){
+interface PaginatedData {
+  page: number;
+  totalPages: number;
+  last: boolean;
+}
 
-    const router = useRouter();
+interface PaginationProps {
+  data: PaginatedData | null;
+  basePath: string;
+  extraParams?: Record<string, string | number | undefined>;
+  onPageChange?: (page: number) => void; // ← callback optionnel
+}
+export default function Pagination({ data, basePath, extraParams = {}, onPageChange }: PaginationProps) {
+  const router = useRouter();
 
-    const {products, loadProducts, searchParams} = useProductSearch();
+  if (!data || data.totalPages <= 1) return null;
 
-    if (!products || products.totalPages <= 1) return null;
+  const currentPage = data.page ?? 0;
+  const totalPages = data.totalPages;
 
-    const currentPage = products.page ?? 0;
-    const totalPages = products.totalPages;
+  const goToPage = (p: number) => {
+    const q = new URLSearchParams();
+    q.set("page", String(p));
+    Object.entries(extraParams).forEach(([key, val]) => {
+      if (key === "page" || key === "size") return;
+      if (val !== undefined && val !== "") q.set(key, String(val));
+    });
+    router.push(`${basePath}?${q.toString()}`);
+    onPageChange?.(p); // ← déclenche le rechargement
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
-    const goToPage = (p : number) => {
+  const pages = Array.from({ length: totalPages }, (_, i) => i);
 
-        const newParams = {...searchParams, page : p};
-        const q = new URLSearchParams();
-
-        q.set("page", String(p));
-        if (newParams.search) q.set("search", newParams.search);
-        if (newParams.minPrice) q.set("minPrice", String(newParams.minPrice));
-        if (newParams.maxPrice) q.set("maxPrice", String(newParams.maxPrice));
-        if (newParams.sortBy) q.set("sortBy", newParams.sortBy);
-        if (newParams.direction) q.set("direction", newParams.direction);
-        if (newParams.size) q.set("size", String(newParams.size));
-
-        router.push(`/products?${q.toString()}`);
-        loadProducts(newParams);
-        window.scrollTo({top:0, behavior : "smooth"});
-
-    }
-
-    const pages = Array.from({length : totalPages}, (_,i) => i);
-
-     return (
+  return (
     <div className={styles.container}>
       <button
         className={styles.btn}
@@ -58,12 +59,11 @@ export default function Pagination(){
       </div>
       <button
         className={styles.btn}
-        disabled={products.last}
+        disabled={data.last}
         onClick={() => goToPage(currentPage + 1)}
       >
         Suivant →
       </button>
     </div>
   );
-
 }

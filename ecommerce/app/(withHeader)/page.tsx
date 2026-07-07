@@ -1,9 +1,8 @@
-import Header from "@/components/header/header";
-import styles from "./page.module.css";
+import styles from "../page.module.css";
 import CatalogSection from "@/components/category/category-section";
 
 export default function Home() {
- return (
+  return (
     <>
       <div className={styles.hero}>
         <h1 className={styles.heroTitle}>
@@ -14,7 +13,6 @@ export default function Home() {
         </p>
       </div>
 
-      <Header></Header>
       <div className={styles.listSection}>
         <CatalogSection />
       </div>

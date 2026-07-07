@@ -1,10 +1,14 @@
-import SubCategorySection from "@/components/category/sub-category-section";
 import styles from "./page.module.css";
-import Header from "@/components/header/header";
-export default async function SubCat({params} : {params : Promise<{parentCategoryId : string}>}) {
-     const { parentCategoryId } = await params;
+import CategoryDetailsSection from "@/components/category/category-details-section";
 
-    return (
+export default async function SubCatDetails({
+  params,
+}: {
+  params: Promise<{ parentCategoryId: number; id: number }>;
+}) {
+  const { parentCategoryId, id } = await params;
+
+  return (
     <>
       <div className={styles.hero}>
         <h1 className={styles.heroTitle}>
@@ -15,9 +19,8 @@ export default async function SubCat({params} : {params : Promise<{parentCategor
         </p>
       </div>
 
-      <Header></Header>
       <div className={styles.listSection}>
-        <SubCategorySection parentCategoryId={parentCategoryId}/>
+        <CategoryDetailsSection parentCategoryId={parentCategoryId} id={id} />
       </div>
     </>
   );

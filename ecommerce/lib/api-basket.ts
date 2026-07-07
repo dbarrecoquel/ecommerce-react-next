@@ -1,4 +1,4 @@
-import { BasketItemCount } from "@/models/basket.model";
+import { AddToBasketRequest, BasketItemCount, MessageResponse } from "@/models/basket.model";
 
 const API_BASE = "http://localhost:8082/api";
 
@@ -17,4 +17,18 @@ export async function fetchBasketCount() : Promise<number> {
         return 0;
     }
 
+}
+
+export async function addToBasket(request : AddToBasketRequest) : Promise<MessageResponse>{
+    const res = await fetch(`${API_BASE}/basket/add`, {
+        method : "POST",
+        headers : {
+            "Content-Type" : "application/json",
+
+        },
+        credentials : "include",
+        body : JSON.stringify(request)
+    })
+    if (!res.ok) throw new Error("Erreur lors de l'ajout au panier");
+    return res.json();
 }
