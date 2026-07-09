@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { CatalogProvider } from "@/contexts/category.context";
 import { BasketProvider } from "@/contexts/basket.context";
-import Header from "@/components/header/header";
+import { AuthProvider } from "@/contexts/auth.context";
 
 
 const inter = Inter ({ subsets : ["latin"]});
@@ -23,6 +23,7 @@ export default function RootLayout({
       lang="en"
     >
       <body className="min-h-full flex flex-col">
+        <AuthProvider>
         <BasketProvider>
           
           <CatalogProvider>
@@ -30,6 +31,7 @@ export default function RootLayout({
           </CatalogProvider>
           
         </BasketProvider>
+        </AuthProvider>
         </body>
     </html>
   );

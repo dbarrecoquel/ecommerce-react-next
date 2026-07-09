@@ -46,6 +46,7 @@
   display: flex;
   gap: 24px;
   flex-shrink: 0;
+  align-items: center;
 }
 
 .navLink {
@@ -59,3 +60,29 @@
 .navLink:hover {
   color: #fff;
 }
+.signOutBtn {
+  background: none;
+  border: none;
+  color: #94A3B8;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.15s;
+  font-family: inherit;
+}
+
+.signOutBtn:hover { color: #EF4444; }
+
+.navLinkPrimary {
+  color: #fff;
+  background: #3B82F6;
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+
+.navLinkPrimary:hover { background: #2563EB; }
