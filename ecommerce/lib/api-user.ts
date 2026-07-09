@@ -1,5 +1,6 @@
 import { LoginRequest, UpdatePasswordRequest, User, UserRegistrationRequest } from "@/models/user.model";
 import { fetchWithAuth } from "./api";
+import { Address } from "@/models/address.model";
 const API_BASE = "http://localhost:8082/api";
 
 export async function register(request : UserRegistrationRequest) : Promise<User>{
@@ -42,12 +43,17 @@ const res = await fetchWithAuth(`${API_BASE}/profile`, authHeaders, {
   return res.json();
 }
 
-/*
-export async function changePassword(request: UpdatePasswordRequest) : Promise<void> {
-    const res = await fetch(`${API_BASE}/profile/changePassword`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+
+export async function changePassword(request: UpdatePasswordRequest, authHeaders: Record<string, string>) : Promise<void> {
+    const res = await fetchWithAuth(`${API_BASE}/profile/password`, authHeaders, {
+    method: "PUT",
     body: JSON.stringify(request),
   });
+  if (!res.ok) throw new Error("Erreur lors de la mise à jour du mot de passe");
+}
 
-}*/
+export async function getAddresses(authHeaders : Record<string,string>) : Promise<Address[]>{
+     const res = await fetchWithAuth(`${API_BASE}/profile/addresses`, authHeaders);
+    if (!res.ok) throw new Error("Impossible de charger les adresses");
+    return res.json();
+}

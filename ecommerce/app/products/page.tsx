@@ -3,6 +3,7 @@ import ProductSearchSection from "@/components/product/search-product-section";
 import { ProductSearchParams } from "@/models/product.model";
 import styles from "./page.module.css";
 import SearchBar from "@/components/searchbar/searchbar";
+import Link from "next/link";
 interface ProductSearchItemProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
@@ -27,6 +28,8 @@ export default async function ProductSearchPage({searchParams}: ProductSearchIte
             Des milliers de produits au meilleur prix
             </p>
         </div>
+
+        <Link href="/" className={styles.backBtn}>← Retour sur la page d'accueil</Link>
         <div className={styles.searchSection}>
             <SearchBar initialParams={params} />
         </div>

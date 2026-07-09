@@ -79,7 +79,7 @@ export default  function ProductDetailsPage({ params }: { params: Promise<{ id: 
         </div>
       )}
     <div className={styles.container}>
-      <Link href="/" className={styles.backBtn}>← Retour sur la page d'acceuil</Link>
+      <Link href="/" className={styles.backBtn}>← Retour sur la page d'accueil</Link>
 
       <div className={styles.card}>
         <div className={styles.imageBanner}>
