@@ -57,3 +57,27 @@ export async function getAddresses(authHeaders : Record<string,string>) : Promis
     if (!res.ok) throw new Error("Impossible de charger les adresses");
     return res.json();
 }
+
+export async function getAdressById(id: number, authHeaders : Record <string,string>) : Promise<Address>{
+    const res = await fetchWithAuth(`${API_BASE}/profile/addresses/${id}`, authHeaders);
+    if (!res.ok) throw new Error("Impossible de charger l'adresse");
+    return res.json();
+}
+export async function updateAdress(id:number, request: Address, authHeaders: Record<string, string>) : Promise<void> {
+    const res = await fetchWithAuth(`${API_BASE}/profile/addresses/${id}`, authHeaders, {
+    method: "PUT",
+    body: JSON.stringify(request),
+  });
+  if (!res.ok) throw new Error("Erreur lors de la mise à jour de l'adresse");
+}
+export async function createAddress(
+  request: Omit<Address, "id">,
+  authHeaders: Record<string, string>
+): Promise<Address> {
+  const res = await fetchWithAuth(`${API_BASE}/profile/addresses`, authHeaders, {
+    method: "POST",
+    body: JSON.stringify(request),
+  });
+  if (!res.ok) throw new Error("Erreur lors de la création de l'adresse");
+  return res.json();
+}

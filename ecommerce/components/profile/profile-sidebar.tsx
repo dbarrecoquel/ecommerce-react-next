@@ -7,6 +7,7 @@ import styles from "./profile-sidebar.module.css";
 const NAV_ITEMS = [
   { href: "/profile", label: "Mon profil", icon: "👤" },
   { href: "/profile/update-password", label: "Mot de passe", icon: "🔒" },
+  { href: "/profile/addresses", label: "Adresses", icon: "📍" },
 ];
 
 export default function ProfileSidebar() {
