@@ -7,6 +7,7 @@ import { clearBasket, removeLineItem, updateQuantity } from "@/lib/api-basket";
 import BasketLineItem from "@/components/basket/basket-line-item";
 import styles from "./page.module.css";
 import { formatPrice } from "@/hooks/utils";
+import { useRouter } from "next/navigation";
 
 
 
@@ -15,7 +16,7 @@ type ToastState = { type: "success" | "error"; message: string } | null;
 export default function BasketPage() {
   const { basket, loading, loadBasket, refreshCount } = useBasket();
   const [toast, setToast] = useState<ToastState>(null);
-
+  const router = useRouter();
   useEffect(() => {
     loadBasket();
   }, [loadBasket]);
@@ -127,9 +128,12 @@ export default function BasketPage() {
                 <span>Total</span>
                 <span>{formatPrice(basket.total)}</span>
               </div>
-              <button className={styles.checkoutBtn}>
-                Passer la commande →
-              </button>
+              <button
+              className={styles.checkoutBtn}
+              onClick={() => router.push("/checkout/addresses")}
+            >
+              Passer la commande →
+            </button> 
             </div>
           </div>
         )}

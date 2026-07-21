@@ -1,0 +1,126 @@
+.section { display: flex; flex-direction: column; gap: 16px; }
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sectionTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0C1A2E;
+}
+
+.addBtn {
+  height: 34px;
+  padding: 0 14px;
+  background: none;
+  border: 1.5px solid #3B82F6;
+  color: #3B82F6;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  font-family: inherit;
+}
+.addBtn:hover { background: #EFF6FF; }
+
+.addBtnLarge {
+  height: 38px;
+  padding: 0 18px;
+  background: #3B82F6;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+.addBtnLarge:hover { background: #2563EB; }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.card {
+  position: relative;
+  background: #fff;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  font-family: inherit;
+  width: 100%;
+}
+.card:hover { border-color: #93C5FD; box-shadow: 0 2px 8px rgba(59,130,246,0.1); }
+.selected { border-color: #3B82F6; background: #EFF6FF; }
+
+.cardTop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.label { font-size: 0.9rem; font-weight: 700; color: #0C1A2E; }
+
+.badge {
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.shipping { background: #EFF6FF; color: #3B82F6; }
+.billing { background: #F0FDF4; color: #10B981; }
+
+.defaultBadge {
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 20px;
+  background: #FEF9C3;
+  color: #854D0E;
+}
+
+.cardBody { font-size: 0.825rem; color: #475569; line-height: 1.7; }
+.complement { color: #94A3B8; }
+
+.checkmark {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 22px;
+  height: 22px;
+  background: #3B82F6;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 32px;
+  text-align: center;
+  color: #64748B;
+  border: 1.5px dashed #E2E8F0;
+  border-radius: 12px;
+  font-size: 0.875rem;
+}
