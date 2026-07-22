@@ -75,7 +75,7 @@ export default function CheckoutAddress() {
         { shippingAddressId: shippingId, billingAddressId: effectiveBillingId },
         getAuthHeaders()
       );
-      router.push("/checkout/summary");
+      router.push("/checkout/shipping");
     } catch (e) {
       setToast({ type: "error", message: e instanceof Error ? e.message : "Erreur" });
     }
